@@ -110,7 +110,10 @@ def user_commands(repo_id, user_id, timestamp, branch):
     command_groups = {name: key_commands(name) for name in key_command_names if name in registry.lists}
 
     # Add formatters
-    command_groups["user.formatters"] = formatters()
+    try:
+        command_groups["user.formatters"] = formatters()
+    except Exception:
+        pass
 
     # Get all the commands in all the contexts
     list_of_contexts = registry.contexts.items()
