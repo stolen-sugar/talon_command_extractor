@@ -1,7 +1,7 @@
 # Talon Command Extractor
 Extracts command mappings from Talon into a JSON file. To use it, follow these steps:
 1. Copy `extract.py` into `~/.talon/user`
-2. You will need to run `automation.py` in a different virtual environment where you have PyGithub installed. PyGithub does not work when you install it using the pip provided in Talon, at least on my Mac. I am running `automation.py` from PyCharm.
+2. You will need to run `automation.py` in a different virtual environment where you have PyGithub installed. PyGithub does not work when you install it using the pip provided in Talon, at least on my Mac. I am running `automation.py` from PyCharm. You need to have a file in your home directory called `.github` that contains your authentication token in the following form `oauth=MY_AUTH_TOKEN`
 3. The script assumes you don't have anything in `~/.talon/user` aside from `extract.py`
 4. It will first clone the base repo and create a file of base commands.
 5. Then it will query Github for a list of forks and create a json file with info about the forks.
