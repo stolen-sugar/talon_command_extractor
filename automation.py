@@ -53,6 +53,6 @@ def alt_commands():
 
 
 if __name__ == '__main__':
-    # base_commands()
-    # get_forks()
+    base_commands()
+    get_forks()
     alt_commands()
