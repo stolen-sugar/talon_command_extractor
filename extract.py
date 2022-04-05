@@ -109,7 +109,10 @@ def user_commands(repo_id, user_id, timestamp, branch):
     # Storing these in a dict makes it easier to detect duplicates
     command_groups = {name: key_commands(name) for name in key_command_names if name in registry.lists}
 
-    # get all the commands in all the contexts
+    # Add formatters
+    command_groups["user.formatters"] = formatters()
+
+    # Get all the commands in all the contexts
     list_of_contexts = registry.contexts.items()
     for name, context in list_of_contexts:
         commands = context.commands  # Get all the commands from a context
@@ -168,9 +171,8 @@ class Actions:
         for fork in forks:
             repo_dir = os.path.join(this_dir, fork["repo_name"])
             print(f"Getting commands for user {fork['user_id']}")
-            print(f"About to sleep {SLEEP_TIME}s")
             run(["git", "clone", fork["clone_url"]], encoding='utf8', cwd=this_dir)
-            print(f"About to sleep {SLEEP_TIME}s")
+            print(f"Sleeping for {SLEEP_TIME}s")
             time.sleep(SLEEP_TIME)
             try:
                 alt_commands.append(user_commands(repo_id=fork["repo_id"], user_id=fork["user_id"], timestamp=datetime.now().isoformat(), branch=fork["default_branch"]))
