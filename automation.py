@@ -44,7 +44,7 @@ def get_forks():
     file_path = os.path.join(home, '.talon/user/forks.json')
     print("Creating fork info file")
     with open(file_path, "w") as write_file:
-        json.dump(forks, write_file, indent=4)
+        json.dump(forks[1:], write_file, indent=4)
 
 def alt_commands():
     """Gets commands for other repos"""
@@ -53,6 +53,6 @@ def alt_commands():
 
 
 if __name__ == '__main__':
-    base_commands()
-    get_forks()
+    # base_commands()
+    # get_forks()
     alt_commands()
