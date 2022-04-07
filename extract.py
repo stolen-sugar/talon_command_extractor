@@ -153,6 +153,11 @@ class Actions:
         with open(file_path, "w") as write_file:
             json.dump(commands.__dict__, write_file, indent=4)
 
+        file_path = os.path.join(this_dir, 'base_commands_core.json')
+        print("Creating base commands core file")
+        with open(file_path, "w") as write_file:
+            json.dump(commands.command_groups, write_file, indent=4)
+
     def alt_commands():
         """Creates a file of alternative voice commands"""
 
@@ -174,14 +179,21 @@ class Actions:
         for fork in forks:
             repo_dir = os.path.join(this_dir, fork["repo_name"])
             print(f"Getting commands for user {fork['user_id']}")
-            run(["git", "clone", fork["clone_url"]], encoding='utf8', cwd=this_dir)
-            print(f"Sleeping for {SLEEP_TIME}s")
-            time.sleep(SLEEP_TIME)
             try:
-                alt_commands.append(user_commands(repo_id=fork["repo_id"], user_id=fork["user_id"], timestamp=datetime.now().isoformat(), branch=fork["default_branch"]))
-            except RuntimeError:
+                run(["git", "clone", fork["clone_url"]], encoding='utf8', cwd=this_dir)
+            except Exception:
                 errors.append(fork)
                 continue
+            for branch in fork["branches"]:
+                try:
+                    print(f"Branch {branch}")
+                    run(["git", "checkout", branch], encoding='utf8', cwd=repo_dir)
+                    print(f"Sleeping for {SLEEP_TIME}s")
+                    time.sleep(SLEEP_TIME)
+                    alt_commands.append(user_commands(repo_id=fork["repo_id"], user_id=fork["user_id"], timestamp=datetime.now().isoformat(), branch=branch))
+                except Exception:
+                    errors.append(fork)
+                    continue
             run(["rm", "-rf", repo_dir], encoding='utf8')
 
         for user_data in alt_commands:
