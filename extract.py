@@ -6,7 +6,7 @@ from subprocess import *
 import sys, os, json
 
 
-SLEEP_TIME = 30
+SLEEP_TIME = 1
 
 
 class CommandGroup:
@@ -175,14 +175,19 @@ class Actions:
             repo_dir = os.path.join(this_dir, fork["repo_name"])
             print(f"Getting commands for user {fork['user_id']}")
             run(["git", "clone", fork["clone_url"]], encoding='utf8', cwd=this_dir)
-            print(f"Sleeping for {SLEEP_TIME}s")
+            print(f"Sleeping for {SLEEP_TIME}s after cloning repo")
             time.sleep(SLEEP_TIME)
             try:
+                user_commands(repo_id=fork["repo_id"], user_id=fork["user_id"], timestamp=datetime.now().isoformat(), branch=fork["default_branch"])
+                print("Sleeping for 5s before getting alt_commands")
+                time.sleep(5)
                 alt_commands.append(user_commands(repo_id=fork["repo_id"], user_id=fork["user_id"], timestamp=datetime.now().isoformat(), branch=fork["default_branch"]))
             except RuntimeError:
                 errors.append(fork)
                 continue
             run(["rm", "-rf", repo_dir], encoding='utf8')
+            print("Sleeping for 1s after rm")
+            time.sleep(1)
 
         for user_data in alt_commands:
             for command_group in user_data.command_groups:
